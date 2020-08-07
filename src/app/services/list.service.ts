@@ -41,9 +41,21 @@ export class ListService {
     const item = {
       id: Math.max(...this.items.map(i => i.id), 0) + 1,
       action,
-      checked: false
+      checked: false,
+      subtasks: [],
     };
     this.items.unshift(item);
+    return of('ok');
+  }
+
+  public addSubtask(action: string, id: number): Observable<string> {
+    const item = this.items.find(items => items.id === id);
+    const subtask = {
+      id: Math.max(...item.subtasks.map(i => i.id), 0) + 1,
+      action,
+      checked: false,
+    };
+    item.subtasks.push(subtask);
     return of('ok');
   }
 
@@ -71,10 +83,6 @@ export class ListService {
     const target = this.items.find(item => item.id === id);
     target.action = value;
     return of('ok');
-  }
-
-  pageChanging(limit: number, offset: number): Observable<ListItem[]> {
-    return of(this.items.slice(offset, offset + limit));
   }
 
 }

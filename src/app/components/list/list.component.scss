@@ -40,7 +40,6 @@
   }
   
   ul li.checked::before, li.checked::before input {
-    content: '';
     position: absolute;
     border-color: #fff;
     border-style: solid;

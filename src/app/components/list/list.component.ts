@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ListItem } from '../../interfaces/list-item.interface';
 import { ListService } from '../../services/list.service';
@@ -54,10 +54,9 @@ export class ListComponent implements OnInit {
     event.stopPropagation();
   }
 
-  public check(id: number, event): void {
+  public check(id: number): void {
     this.listService.check(id)
       .subscribe(() => this.getItems());
-    event.stopPropagation();
   }
 
   public edit(id: number, event): void {
@@ -67,17 +66,17 @@ export class ListComponent implements OnInit {
       return;
     } else {
 
-    if (formControl.enabled) {
-      this.listService.edit(id, formControl.value)
-        .subscribe(() => {
-          formControl.disable();
-          this.getItems();
-        });
-    } else {
-      formControl.enable();
-      event.target.parentElement.querySelector('input').focus();
+      if (formControl.enabled) {
+        this.listService.edit(id, formControl.value)
+          .subscribe(() => {
+            formControl.disable();
+            this.getItems();
+          });
+      } else {
+        formControl.enable();
+        event.target.parentElement.querySelector('input').focus();
+      }
     }
-  }
     event.stopPropagation();
   }
 
@@ -85,6 +84,11 @@ export class ListComponent implements OnInit {
     this.checked = checked;
     this.currentPage = 0;
     this.getItems();
+  }
+
+  public addSubtask(id: number, action: string) {
+    this.listService(id, action)
+      .subscribe(() => this.getItems())
   }
 
 }

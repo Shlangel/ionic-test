@@ -8,8 +8,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
-import { ListComponent } from '../components/list/list.component';
 import { AddComponent } from '../components/add/add.component';
+import { ListComponent } from '../components/list/list.component';
 
 @NgModule({
   imports: [

@@ -13,6 +13,8 @@ import { Tab1PageRoutingModule } from './tab1-routing.module';
     FormsModule,
     Tab1PageRoutingModule
   ],
-  declarations: [Tab1Page]
+  declarations: [
+    Tab1Page,
+  ]
 })
 export class Tab1PageModule {}
