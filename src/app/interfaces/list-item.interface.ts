@@ -7,6 +7,6 @@ export interface ListItem {
 
 interface Subtask {
   id: number;
-  action: string;
+  value: string;
   checked: boolean;
 }

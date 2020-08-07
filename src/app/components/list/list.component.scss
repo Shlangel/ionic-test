@@ -149,6 +149,16 @@
     color: white;
   }
 
+  .addSubtask {
+    border-radius: 12px;
+    background-color: #c4e4fb;
+    font-size: 23px;
+    color: #36a5f4;
+    margin-left: -32px;
+    position: fixed;
+    margin-top: 3px;
+  }
+
   mat-paginator {
     justify-content: center;
     display: flex;

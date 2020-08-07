@@ -27,8 +27,14 @@ export class ListComponent implements OnInit {
       .subscribe(itemsList => {
         this.items = itemsList.items;
         this.length = itemsList.count;
-        this.items.forEach(item => this.list.addControl(
-          `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required)));
+        this.items.forEach(item => {
+          this.list.addControl(
+          `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required));
+          item.subtasks.forEach(subtask =>
+            this.list.addControl(
+              `${subtask.id}`, new FormControl(`${subtask.value}` , Validators.required))
+            );
+        });
         if (this.items.length < 1 && this.currentPage !== 0) {
           this.currentPage -= 1;
           this.getItems();
@@ -86,9 +92,10 @@ export class ListComponent implements OnInit {
     this.getItems();
   }
 
-  public addSubtask(id: number, action: string) {
-    this.listService(id, action)
-      .subscribe(() => this.getItems())
+  public addSubtask(id: number) {
+    this.listService.addSubtask(id)
+      .subscribe(() => this.getItems());
+    document.getElementById(`${id}`).focus();
   }
 
 }

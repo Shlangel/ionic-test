@@ -48,14 +48,14 @@ export class ListService {
     return of('ok');
   }
 
-  public addSubtask(action: string, id: number): Observable<string> {
+  public addSubtask(id: number): Observable<string> {
     const item = this.items.find(items => items.id === id);
     const subtask = {
       id: Math.max(...item.subtasks.map(i => i.id), 0) + 1,
-      action,
+      value: 'gg',
       checked: false,
     };
-    item.subtasks.push(subtask);
+    item.subtasks.unshift(subtask);
     return of('ok');
   }
 
