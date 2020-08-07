@@ -1,0 +1,156 @@
+* {
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+  ul {
+    padding: 0;
+    margin-top: 30px;
+    margin-left: 9%;
+    margin-right: 9%;
+  }
+  
+  ul li {
+    position: relative;
+    margin-top: 15px;
+    padding: 12px 8px 12px 40px;
+    font-size: 18px;
+    transition: 0.2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    list-style-type: none;
+    border-radius: 10px;
+    border: 3px;
+
+  }
+
+  li input {
+    margin-top: -3px;
+  }
+  
+  ul li:nth-child(odd), li:nth-child(odd) input {
+    background: #c4e4fb;
+  }
+  
+  ul li.checked , li.checked input  {
+    text-decoration: line-through;
+        font-weight: bold;
+  }
+  
+  ul li.checked::before, li.checked::before input {
+    content: '';
+    position: absolute;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    top: 10px;
+    left: 16px;
+    transform: rotate(45deg);
+    height: 15px;
+    width: 7px;
+  }
+  
+  .close {
+    background-color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 6px 11px 7px 11px;
+    border-radius: 25px;
+    border: 0;
+    margin: 14.4px;
+  }
+  
+  .close:hover {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  input {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    width: 75%;
+    padding: 10px;
+    float: left;
+    font-size: 16px;
+  }
+
+  form input {
+    max-width: 70%;
+  }
+
+  .sort {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    max-width: 92%;
+    margin: auto;
+    margin-top: 40px;
+  }
+
+  .sort button {
+    padding: 8px 10px 8px 10px;
+    width: 30%;
+    margin-left: 21px;
+    background: white;
+    color: #555;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 10px;
+    border-color: #36a5f4;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .sort button:hover {
+    background-color: #9cd6ff;
+  }
+
+  .no-edit {
+    padding: 9px 14px;
+    background-color: #36a5f4;
+    color: white;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .edit {
+    background-color: #006dbb;
+    padding: 9px 14px;
+    color: white;
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .check {
+    padding: 3px 3px 0px 3px;
+    border: 0;
+    margin: 5px;
+    border-radius: 28px;
+    position: absolute;
+    margin-left: -74%;
+    cursor: pointer;
+    background-color: white;
+  }
+
+  .check:hover {
+    background-color: #36a5f4;
+    color: white;
+  }
+
+  .check.checked {
+    background-color: #0176ca;
+    color: white;
+  }
+
+  mat-paginator {
+    justify-content: center;
+    display: flex;
+  }
