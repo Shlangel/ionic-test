@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
 import { ListItem } from '../../interfaces/list-item.interface';
 import { ListService } from '../../services/list.service';
 
@@ -9,8 +9,6 @@ import { ListService } from '../../services/list.service';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
-  @ViewChild('listInput') listInput: ElementRef;
-  @ViewChild('edit') editBtn: ElementRef;
 
   items: ListItem[] = [];
 
@@ -27,13 +25,13 @@ export class ListComponent implements OnInit {
       .subscribe(itemsList => {
         this.items = itemsList.items;
         this.length = itemsList.count;
+        this.list = new FormGroup({});
         this.items.forEach(item => {
           this.list.addControl(
-          `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required));
+            `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required));
           item.subtasks.forEach(subtask =>
             this.list.addControl(
-              `${subtask.id}`, new FormControl(`${subtask.value}` , Validators.required))
-            );
+              `${subtask.id}`, new FormControl({ value: `${subtask.action}`, disabled: true}, Validators.required)));
         });
         if (this.items.length < 1 && this.currentPage !== 0) {
           this.currentPage -= 1;
@@ -51,7 +49,6 @@ export class ListComponent implements OnInit {
       this.currentPage = event.pageIndex;
     }
     this.listService.getItems(this.checked, event?.pageSize || 4, (event?.pageSize || 4) * (this.currentPage || 0));
-
   }
 
   public removeItem(id: number, event): void {
@@ -66,8 +63,8 @@ export class ListComponent implements OnInit {
   }
 
   public edit(id: number, event): void {
-
     const formControl = this.list.get(`${id}`);
+
     if (event.relatedTarget === document.getElementById(`${id}`)) {
       return;
     } else {
@@ -80,7 +77,7 @@ export class ListComponent implements OnInit {
           });
       } else {
         formControl.enable();
-        event.target.parentElement.querySelector('input').focus();
+        event.target.parentElement.querySelector('ion-input').setFocus();
       }
     }
     event.stopPropagation();
@@ -92,10 +89,23 @@ export class ListComponent implements OnInit {
     this.getItems();
   }
 
-  public addSubtask(id: number) {
+  public addSubtask(id: number, subtasks) {
+    const inputId = +(`${id}` + (subtasks.length + 1))
+    console.log(inputId)
     this.listService.addSubtask(id)
-      .subscribe(() => this.getItems());
-    document.getElementById(`${id}`).focus();
+      .subscribe(() => {
+        this.getItems();
+        setTimeout(() => {
+          this.list.get(`${inputId}`).enable();
+          document.getElementById(`${inputId}`).focus();
+        }, 0);
+      });
   }
 
+  public subtaskBlur(itId: number, subId: number, event) {
+    const form = this.list.get(`${subId}`);
+    this.listService.subtaskBlur(itId, subId)
+    form.disable();
+    event.stopPropagation();
+  }
 }

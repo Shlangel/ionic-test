@@ -13,7 +13,7 @@
   ul li {
     position: relative;
     margin-top: 15px;
-    padding: 12px 8px 12px 40px;
+    padding: 12px 8px 24px 52px;
     font-size: 18px;
     transition: 0.2s;
     -webkit-user-select: none;
@@ -26,20 +26,20 @@
 
   }
 
-  li input {
+  li ion-input {
     margin-top: -3px;
   }
   
-  ul li:nth-child(odd), li:nth-child(odd) input {
+  ul li:nth-child(odd), li:nth-child(odd) ion-input, .subtaskInput  {
     background: #c4e4fb;
   }
   
-  ul li.checked , li.checked input  {
+  ul li.checked , li.checked ion-input {
     text-decoration: line-through;
         font-weight: bold;
   }
   
-  ul li.checked::before, li.checked::before input {
+  ul li.checked::before, li.checked::before ion-input {
     position: absolute;
     border-color: #fff;
     border-style: solid;
@@ -67,7 +67,7 @@
     color: white;
   }
   
-  input {
+  ion-input, .subtaskInput  {
     margin: 0;
     border: none;
     border-radius: 0;
@@ -77,7 +77,7 @@
     font-size: 16px;
   }
 
-  form input {
+  form ion-input {
     max-width: 70%;
   }
 
@@ -111,6 +111,7 @@
   }
 
   .no-edit {
+    margin-left: 40px;
     padding: 9px 14px;
     background-color: #36a5f4;
     color: white;
@@ -120,6 +121,7 @@
   }
 
   .edit {
+    margin-left: 40px;
     background-color: #006dbb;
     padding: 9px 14px;
     color: white;
@@ -154,10 +156,12 @@
     background-color: #c4e4fb;
     font-size: 23px;
     color: #36a5f4;
-    margin-left: -32px;
-    position: fixed;
+    position: absolute;
     margin-top: 3px;
+    margin-left: -80px;
   }
+
+  
 
   mat-paginator {
     justify-content: center;

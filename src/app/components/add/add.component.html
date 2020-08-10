@@ -1,7 +1,7 @@
 <div class="header">
   <h2>To Do List</h2>
-  <form [formGroup]="header" (submit)="addItem()">
-    <input #mainInput type="text" formControlName="action" placeholder="To do...">
-    <input type="submit" class="addBtn" [disabled]="action.invalid" value="Add">
+  <form [formGroup]="header" (submit)="addItem($event)">
+    <ion-input #mainInput type="text" formControlName="action" placeholder="To do..."></ion-input>
+    <ion-input type="submit" class="addBtn" [disabled]="action.invalid" value="Add"></ion-input>
   </form>
 </div>

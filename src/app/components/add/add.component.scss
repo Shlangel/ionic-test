@@ -24,11 +24,14 @@ h2 {
   clear: both;
 }
 
-.header input {
+.header ion-input {
   border-radius: 10px;
 }
 
-input {
+ion-input {
+  text-align: left;
+  color: black;
+  background-color: white;
   margin: 0;
   margin-left: 1%;
   border: none;
@@ -37,11 +40,9 @@ input {
   padding: 10px;
   float: left;
   font-size: 16px;
-  background-color: white;
-
 }
 
-form input {
+form ion-input {
   max-width: 70%;
 }
 
@@ -55,4 +56,6 @@ form input {
   font-size: 16px;
   cursor: pointer;
   transition: 0.3s;
+  color: white;
+  font-weight: 700;
 }

@@ -50,9 +50,13 @@ export class ListService {
 
   public addSubtask(id: number): Observable<string> {
     const item = this.items.find(items => items.id === id);
+    if (item.subtasks.length === 3) {
+      return;
+    }
+    const subtaskId = `${item.id}` + (Math.max(...item.subtasks.map(i => i.id), 0)  % 10 + 1);
     const subtask = {
-      id: Math.max(...item.subtasks.map(i => i.id), 0) + 1,
-      value: 'gg',
+      id: +subtaskId,
+      action: '',
       checked: false,
     };
     item.subtasks.unshift(subtask);
@@ -70,6 +74,7 @@ export class ListService {
   public removeItem(id: number): Observable<string> {
     this.items = this.items.filter(items => items.id !== id);
     localStorage.setItem('items', JSON.stringify(this.items));
+    this.getItemsServer();
     return of('ok');
   }
 
@@ -83,6 +88,12 @@ export class ListService {
     const target = this.items.find(item => item.id === id);
     target.action = value;
     return of('ok');
+  }
+
+  public subtaskBlur(itId: number, subId: number) {
+
+    const item = this.items.find(i => i.id === itId);
+    item.subtasks.find(s => s.id === subId); //
   }
 
 }

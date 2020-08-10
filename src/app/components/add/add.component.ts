@@ -21,14 +21,17 @@ export class AddComponent implements OnInit {
     return this.header.controls.action as FormControl;
   }
 
-  public addItem(): void {
+  public addItem(event): void {
     const value = this.action.value?.trim();
     if (!value) {
       this.action.reset();
       return;
     }
     this.listService.addItem(value)
-      .subscribe(() => this.listService.getItems(null));
+      .subscribe(() => {
+        this.listService.getItems(null);
+        event.target.querySelector('ion-input').setFocus();
+      });
     this.action.reset();
   }
 
