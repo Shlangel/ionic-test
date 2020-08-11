@@ -30,13 +30,12 @@ export class ListComponent implements OnInit {
           this.currentPage = 0;
         }
         this.checked = itemsList.checked;
-        console.log(this.checked);
         this.items.forEach(item => {
           this.list.addControl(
             `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required));
           item.subtasks.forEach(subtask =>
             this.list.addControl(
-              `${subtask.id}`, new FormControl({ value: `${subtask.action}`, disabled: true}, Validators.required)));
+              `${subtask.id}`, new FormControl({ value: `${subtask.action}`, disabled: true }, Validators.required)));
         });
         if (this.items.length < 1 && this.currentPage !== 0) {
           this.currentPage -= 1;
@@ -54,11 +53,16 @@ export class ListComponent implements OnInit {
       this.currentPage = event.pageIndex;
     }
     this.listService.getItems(this.checked, event?.pageSize || 4, (event?.pageSize || 4) * (this.currentPage || 0));
-    console.log(this.checked);
   }
 
   public removeItem(id: number, event): void {
     this.listService.removeItem(id)
+      .subscribe(() => this.getItems());
+    event.stopPropagation();
+  }
+
+  public removeSubtask(itId: number, subId: number, event) {
+    this.listService.removeSubtask(itId, subId)
       .subscribe(() => this.getItems());
     event.stopPropagation();
   }
@@ -68,15 +72,15 @@ export class ListComponent implements OnInit {
       .subscribe(() => this.getItems());
   }
 
-  public edit(id: number, event): void {
+  public editItem(id: number, event): void {
     const formControl = this.list.get(`${id}`);
 
-    if (event.relatedTarget === document.getElementById(`${id}`)) {
+    if (event.detail.relatedTarget === document.getElementById(`${id}`)) {
       return;
     } else {
 
       if (formControl.enabled) {
-        this.listService.edit(id, formControl.value)
+        this.listService.editItem(id, formControl.value)
           .subscribe(() => {
             formControl.disable();
             this.getItems();
@@ -84,6 +88,29 @@ export class ListComponent implements OnInit {
       } else {
         formControl.enable();
         event.target.parentElement.querySelector('ion-input').setFocus();
+      }
+    }
+    event.stopPropagation();
+  }
+
+  public editSubtask(itemId: number, subtaskId: number, event): void {
+    const formControl = this.list.get(`${subtaskId}`);
+
+    if (formControl.enabled && event.target === 1) {
+      return;
+    } else {
+
+      if (formControl.enabled) {
+        this.listService.editSubtask(itemId, subtaskId, formControl.value)
+          .subscribe(() => {
+            formControl.disable();
+            this.getItems();
+          });
+      } else {
+        setTimeout(() => {
+          formControl.enable();
+          event.target.parentElement.querySelector('input').focus();
+        }, 0);
       }
     }
     event.stopPropagation();
@@ -103,9 +130,9 @@ export class ListComponent implements OnInit {
 
   public subtaskBlur(itId: number, subId: number, event) {
     const form = this.list.get(`${subId}`);
+    form.disable();
     this.listService.subtaskBlur(itId, subId, event.target.value)
       .subscribe(() => this.getItems());
-    form.disable();
     event.stopPropagation();
   }
 }

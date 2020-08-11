@@ -79,6 +79,14 @@ export class ListService {
     return of('ok');
   }
 
+  public removeSubtask(itId: number, subId: number): Observable<string> {
+    const item = this.items.find(i => i.id === itId);
+    item.subtasks = item.subtasks.filter(subtask => subtask.id !== subId);
+    localStorage.setItem('items', JSON.stringify(this.items));
+    this.getItemsServer();
+    return of('ok');
+  }
+
   public check(itId: number, subId: number): Observable<string> {
     const item = this.items.find(i => i.id === itId);
     const subtask = item.subtasks.find(s => s.id === subId);
@@ -88,8 +96,14 @@ export class ListService {
     return of('ok');
   }
 
-  public edit(id: number, value: string): Observable<string> {
+  public editItem(id: number, value: string): Observable<string> {
     const target = this.items.find(item => item.id === id);
+    target.action = value;
+    return of('ok');
+  }
+
+  public editSubtask(itemId: number, subtaskId: number, value: string): Observable<string> {
+    const target = this.items.find(item => item.id === itemId).subtasks.find(subtask => subtask.id === subtaskId);
     target.action = value;
     return of('ok');
   }
@@ -97,7 +111,6 @@ export class ListService {
   public subtaskBlur(itId: number, subId: number, value: string): Observable<string> {
     const item = this.items.find(i => i.id === itId);
     value ? item.subtasks.find(s => s.id === subId).action = value : item.subtasks = item.subtasks.filter(s => s.id !== subId);
-    console.log(this.items);
     return of('ok');
   }
 
