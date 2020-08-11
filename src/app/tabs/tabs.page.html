@@ -1,9 +1,15 @@
+
 <ion-tabs #tabs>
-  <div class="body">
-    <app-add></app-add>
+  <app-add></app-add>
+    <ion-content [scrollEvents]="true"
+(ionScrollStart)="logScrollStart()"
+(ionScroll)="logScrolling($event)"
+(ionScrollEnd)="logScrollEnd()">
+    
 
     <app-list></app-list>
-  </div>
+
+</ion-content>
 
 
   <ion-tab-bar slot="bottom">
