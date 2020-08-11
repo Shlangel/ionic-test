@@ -13,7 +13,7 @@ export class ListComponent implements OnInit {
   items: ListItem[] = [];
 
   public list = new FormGroup({});
-  private checked: boolean;
+  public checked: boolean;
   public currentPage = 0;
   public pageSize = 4;
   public length = 0;
@@ -26,6 +26,11 @@ export class ListComponent implements OnInit {
         this.items = itemsList.items;
         this.length = itemsList.count;
         this.list = new FormGroup({});
+        if (this.checked !== itemsList.checked) {
+          this.currentPage = 0;
+        }
+        this.checked = itemsList.checked;
+        console.log(this.checked);
         this.items.forEach(item => {
           this.list.addControl(
             `${item.id}`, new FormControl({ value: `${item.action}`, disabled: true }, Validators.required));
@@ -49,6 +54,7 @@ export class ListComponent implements OnInit {
       this.currentPage = event.pageIndex;
     }
     this.listService.getItems(this.checked, event?.pageSize || 4, (event?.pageSize || 4) * (this.currentPage || 0));
+    console.log(this.checked);
   }
 
   public removeItem(id: number, event): void {
@@ -57,8 +63,8 @@ export class ListComponent implements OnInit {
     event.stopPropagation();
   }
 
-  public check(id: number): void {
-    this.listService.check(id)
+  public check(itId: number, subId: number): void {
+    this.listService.check(itId, subId)
       .subscribe(() => this.getItems());
   }
 
@@ -83,15 +89,8 @@ export class ListComponent implements OnInit {
     event.stopPropagation();
   }
 
-  public filter(checked): void {
-    this.checked = checked;
-    this.currentPage = 0;
-    this.getItems();
-  }
-
   public addSubtask(id: number, subtasks) {
-    const inputId = +(`${id}` + (subtasks.length + 1))
-    console.log(inputId)
+    const inputId = +(`${id}` + (subtasks.length + 1));
     this.listService.addSubtask(id)
       .subscribe(() => {
         this.getItems();
@@ -104,7 +103,8 @@ export class ListComponent implements OnInit {
 
   public subtaskBlur(itId: number, subId: number, event) {
     const form = this.list.get(`${subId}`);
-    this.listService.subtaskBlur(itId, subId)
+    this.listService.subtaskBlur(itId, subId, event.target.value)
+      .subscribe(() => this.getItems());
     form.disable();
     event.stopPropagation();
   }

@@ -50,16 +50,16 @@ export class ListService {
 
   public addSubtask(id: number): Observable<string> {
     const item = this.items.find(items => items.id === id);
-    if (item.subtasks.length === 3) {
-      return;
-    }
     const subtaskId = `${item.id}` + (Math.max(...item.subtasks.map(i => i.id), 0)  % 10 + 1);
     const subtask = {
       id: +subtaskId,
       action: '',
       checked: false,
     };
-    item.subtasks.unshift(subtask);
+    item.subtasks.push(subtask);
+    if (item.checked) {
+      item.checked = false;
+    }
     return of('ok');
   }
 
@@ -68,6 +68,7 @@ export class ListService {
       .subscribe(list => this.items$.next({
         items: list,
         count: this.filteredItemsLength,
+        checked: this.checked
       }));
   }
 
@@ -78,9 +79,12 @@ export class ListService {
     return of('ok');
   }
 
-  public check(id: number): Observable<string> {
-    const item = this.items.find(i => i.id === id);
-    item.checked = !item.checked;
+  public check(itId: number, subId: number): Observable<string> {
+    const item = this.items.find(i => i.id === itId);
+    const subtask = item.subtasks.find(s => s.id === subId);
+    subtask.checked = !subtask.checked;
+
+    item.checked = item.subtasks.length === item.subtasks.filter(s => s.checked === true).length ? true : false;
     return of('ok');
   }
 
@@ -90,10 +94,11 @@ export class ListService {
     return of('ok');
   }
 
-  public subtaskBlur(itId: number, subId: number) {
-
+  public subtaskBlur(itId: number, subId: number, value: string): Observable<string> {
     const item = this.items.find(i => i.id === itId);
-    item.subtasks.find(s => s.id === subId); //
+    value ? item.subtasks.find(s => s.id === subId).action = value : item.subtasks = item.subtasks.filter(s => s.id !== subId);
+    console.log(this.items);
+    return of('ok');
   }
 
 }
