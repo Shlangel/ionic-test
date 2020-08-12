@@ -25,6 +25,14 @@ ul li {
   border: 3px;
 }
 
+.subtask-ul .subtask-list {
+  margin-left: -6%;
+  border-bottom: black;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 2px;
+}
+
 li ion-input {
   margin-top: -3px;
 }
@@ -35,10 +43,6 @@ ul li:nth-child(odd), li:nth-child(odd) ion-input, .subtask-input  {
 
 ul li.checked , li.checked ion-input, li.checked input {
   text-decoration: line-through;
-}
-
-.subtask-list {
-  margin-left: -6%;
 }
 
 ul li.checked::before, li.checked::before ion-input, li.checked::before input {
@@ -67,7 +71,7 @@ ul li.checked::before, li.checked::before ion-input, li.checked::before input {
 
 .subtask-list .close {
   margin-right: 14%;
-  margin-top: 29px;
+  margin-top: 4.5px;
 }
 
 .close:hover {
@@ -104,7 +108,7 @@ form ion-input {
 }
 
 .edit {
-  background-color: #006dbb;
+  background-color: #2ada30;
 }
 
 .subtask-list .no-edit {
@@ -157,7 +161,6 @@ form ion-input {
   color: #36a5f4;
   position: absolute;
   margin-top: 3px;
-  margin-left: -80px;
 }
 
 .addSubtask:hover {

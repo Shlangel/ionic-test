@@ -60,7 +60,7 @@ export class ListService {
     if (item.checked) {
       item.checked = false;
     }
-    return of('ok');
+    return of(subtaskId);
   }
 
   public getItems(checked?: boolean, limit?: number, offset?: number): void {
@@ -87,12 +87,15 @@ export class ListService {
     return of('ok');
   }
 
-  public check(itId: number, subId: number): Observable<string> {
+  public check(itId: number, subId?: number): Observable<string> {
     const item = this.items.find(i => i.id === itId);
-    const subtask = item.subtasks.find(s => s.id === subId);
-    subtask.checked = !subtask.checked;
-
-    item.checked = item.subtasks.length === item.subtasks.filter(s => s.checked === true).length ? true : false;
+    if (!subId) {
+      item.checked = !item.checked;
+    } else {
+      const subtask = item.subtasks.find(s => s.id === subId);
+      subtask.checked = !subtask.checked;
+      item.checked = item.subtasks.length === item.subtasks.filter(s => s.checked === true).length ? true : false;
+    }
     return of('ok');
   }
 
@@ -103,14 +106,10 @@ export class ListService {
   }
 
   public editSubtask(itemId: number, subtaskId: number, value: string): Observable<string> {
-    const target = this.items.find(item => item.id === itemId).subtasks.find(subtask => subtask.id === subtaskId);
-    target.action = value;
-    return of('ok');
-  }
-
-  public subtaskBlur(itId: number, subId: number, value: string): Observable<string> {
-    const item = this.items.find(i => i.id === itId);
-    value ? item.subtasks.find(s => s.id === subId).action = value : item.subtasks = item.subtasks.filter(s => s.id !== subId);
+    const item = this.items.find(item => item.id === itemId);
+    const subtask = item.subtasks.find(subtask => subtask.id === subtaskId);
+    value ? subtask.action = value : item.subtasks = item.subtasks.filter(subtask => subtask.id !== subtaskId);
+    subtask.action = value;
     return of('ok');
   }
 

@@ -17,6 +17,8 @@ export class ListComponent implements OnInit {
   public currentPage = 0;
   public pageSize = 4;
   public length = 0;
+  public editItemButton;
+  public editSubtaskButton;
 
   constructor(private listService: ListService) { }
 
@@ -67,25 +69,30 @@ export class ListComponent implements OnInit {
     event.stopPropagation();
   }
 
-  public check(itId: number, subId: number): void {
+  public check(itId: number, subId?: number): void {
     this.listService.check(itId, subId)
       .subscribe(() => this.getItems());
   }
 
   public editItem(id: number, event): void {
     const formControl = this.list.get(`${id}`);
+    if (event.target === document.getElementById(`${id}`)) {
+      this.editItemButton = event.target;
+    }
 
     if (event.detail.relatedTarget === document.getElementById(`${id}`)) {
       return;
     } else {
 
       if (formControl.enabled) {
+        this.editItemButton.textContent = 'Edit';
         this.listService.editItem(id, formControl.value)
           .subscribe(() => {
             formControl.disable();
             this.getItems();
           });
       } else {
+        this.editItemButton.textContent = 'Save';
         formControl.enable();
         event.target.parentElement.querySelector('ion-input').setFocus();
       }
@@ -95,12 +102,16 @@ export class ListComponent implements OnInit {
 
   public editSubtask(itemId: number, subtaskId: number, event): void {
     const formControl = this.list.get(`${subtaskId}`);
+    if (event.target === document.getElementById(`btn-${subtaskId}`)) {
+      this.editSubtaskButton = event.target;
+    }
 
-    if (formControl.enabled && event.target === 1) {
+    if (formControl.enabled && event.relatedTarget === document.getElementById(`btn-${subtaskId}`)) {
       return;
     } else {
 
       if (formControl.enabled) {
+        this.editSubtaskButton.textContent = 'Edit';
         this.listService.editSubtask(itemId, subtaskId, formControl.value)
           .subscribe(() => {
             formControl.disable();
@@ -108,31 +119,31 @@ export class ListComponent implements OnInit {
           });
       } else {
         setTimeout(() => {
+
           formControl.enable();
           event.target.parentElement.querySelector('input').focus();
         }, 0);
+
+        this.editSubtaskButton.textContent = 'Save';
       }
     }
+
     event.stopPropagation();
   }
 
   public addSubtask(id: number, subtasks) {
     const inputId = +(`${id}` + (subtasks.length + 1));
     this.listService.addSubtask(id)
-      .subscribe(() => {
+      .subscribe(subtaskId => {
         this.getItems();
         setTimeout(() => {
           this.list.get(`${inputId}`).enable();
           document.getElementById(`${inputId}`).focus();
-        }, 0);
-      });
-  }
 
-  public subtaskBlur(itId: number, subId: number, event) {
-    const form = this.list.get(`${subId}`);
-    form.disable();
-    this.listService.subtaskBlur(itId, subId, event.target.value)
-      .subscribe(() => this.getItems());
-    event.stopPropagation();
+          this.editSubtaskButton = document.getElementById(`btn-${subtaskId}`);
+          this.editSubtaskButton.textContent = 'Save';
+        }, 0);
+
+      });
   }
 }
